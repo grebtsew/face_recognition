@@ -1,4 +1,4 @@
-# Face Recognition With PostGis
+# Face Recognition
 This fork implementation focuses on creating a program that can answer these questions:
 
 How many different persons have been at a location over a timeperiod?
