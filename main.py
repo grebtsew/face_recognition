@@ -15,11 +15,19 @@ known_face_names = file_handler.get_names()
 
 known_face_encodings = []
 print("Load all images for recognition")
+i = 0
 for path in all_image_paths:
     print("Currently at ", path)
     image = cv2.imread(path)
-    encoding = face_recognition.face_encodings(image)[0]
-    known_face_encodings.append(encoding)
+
+    try:
+        encoding = face_recognition.face_encodings(image)[0]
+        known_face_encodings.append(encoding)
+    except:
+        file_handler.removedir(path)
+        del known_face_names[i]
+
+    i += 1
 
 print("Capture Camera")
 video_capture = cv2.VideoCapture(0)
@@ -63,9 +71,13 @@ while True:
             print("Saved image", path)
 
             # Update face_recognition list
-            encoding = face_recognition.face_encodings(image)[0]
-            known_face_encodings.append(encoding)
-            known_face_names.append(name)
+            try:
+                encoding = face_recognition.face_encodings(image)[0]
+                known_face_encodings.append(encoding)
+                known_face_names.append(name)
+            except:
+                file_handler.removedir(path)
+
             print("updated encoding")
             # Do memory expand check
             file_handler.check_program_size()

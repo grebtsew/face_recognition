@@ -1,8 +1,8 @@
 import os
 import cv2
 from datetime import datetime
-
-
+import shutil
+from pathlib import Path
 
 def check_program_size():
     '''
@@ -58,6 +58,14 @@ def save_image(name, image):
     cv2.imwrite(path,image)
     return path, image
 
+def removedir(path):
+    p = Path(path)
+    dir_path = path.replace(p.name, "")
+    print(dir_path)
+
+    shutil.rmtree(dir_path, ignore_errors=True)
+    pass
+
 def save_face(name, image):
     '''
     Save image to folder named name
@@ -110,7 +118,9 @@ def get_names():
     lis = []
     for root, dirs, files in os.walk(os.path.dirname(__file__)+"\\Data"):
         for name in dirs:
-            lis.append(name)
+            s = name
+            temp = ''.join([i for i in s if not i.isdigit()])
+            lis.append(temp)
     return lis
 
 
