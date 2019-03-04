@@ -10,7 +10,7 @@ def check_program_size():
     '''
     memory_tresh = 2 # in gb
 
-    size = getFolderSize(os.path.dirname(__file__)+"\\Data")
+    size = getFolderSize(os.path.dirname(__file__)+"/Data")
     print( "Size: " + str(size))
 
     if size > memory_tresh * 1000000:
@@ -49,12 +49,12 @@ def save_image(name, image):
         return None, None;
 
     base = os.path.dirname(__file__)
-    folder = (base+"\\Data\\"+name).replace("\\","/")
+    folder = (base+"/Data/"+name).replace("/","/")
 
     if not os.path.exists(folder):
         os.makedirs(folder)
 
-    path = os.path.dirname(__file__)+"\\Data\\"+name+"\\"+name+".jpg"
+    path = os.path.dirname(__file__)+"/Data/"+name+"/"+name+".jpg"
     cv2.imwrite(path,image)
     return path, image
 
@@ -76,12 +76,12 @@ def save_face(name, image):
         return None, None;
 
     base = os.path.dirname(__file__)
-    folder = (base+"\\Data\\"+name+"\\Face\\").replace("\\","/")
+    folder = (base+"/Data/"+name+"/Face/").replace("/","/")
 
     if not os.path.exists(folder):
         os.makedirs(folder)
 
-    path = os.path.dirname(__file__)+"\\Data\\"+name+"\\Face\\"+name+".jpg"
+    path = os.path.dirname(__file__)+"/Data/"+name+"/Face/"+name+".jpg"
     cv2.imwrite(path,image)
     return path, image
 
@@ -91,37 +91,38 @@ def get_available_name():
     Return a default available filename
     '''
     i = 0
-    for root, dirs, files in os.walk(os.path.dirname(__file__)+"\\Data"):
+    for root, dirs, files in os.walk(os.path.dirname(__file__)+"/Data"):
 
         while(("Unknown"+str(i)) in dirs):
             i += 1
     return "Unknown"+str(i)
 
-def get_images_paths():
+def get_images_paths_and_names():
     '''
     Gets images of all known faces in correct order
-    '''
-    lis = []
-    for root, dirs, files in os.walk(os.path.dirname(__file__)+"\\Data"):
-        for name in dirs: # for each folder
-            for roots, dirss, filess in os.walk(os.path.dirname(__file__)+"\\Data\\"+name):
-                for file in filess: # for each image
-                    if ".jpg" in file or ".png" is file:
-                        lis.append(os.path.dirname(__file__)+"\\Data\\"+name+"\\"+file)
-                        break; # we only want one image per person!
-    return lis
-
-def get_names():
-    '''
     Gets name of all known faces in correct order
     '''
     lis = []
-    for root, dirs, files in os.walk(os.path.dirname(__file__)+"\\Data"):
-        for name in dirs:
+    name_lis = []
+    for root, dirs, files in os.walk(os.path.dirname(__file__)+"/Data"):
+        for name in dirs: # for each folder
+            if "Face" in name :
+                continue
+
+
             s = name
             temp = ''.join([i for i in s if not i.isdigit()])
-            lis.append(temp)
-    return lis
+            name_lis.append(temp)
+
+            for roots, dirss, filess in os.walk(os.path.dirname(__file__)+"/Data/"+name):
+                for file in filess: # for each image
+                    if ".jpg" in file or ".png" is file:
+
+                        if os.path.dirname(__file__)+"/Data/"+name+"/"+file not in lis:
+                            lis.append(os.path.dirname(__file__)+"/Data/"+name+"/"+file)
+                        #break; # we only want one image per person!
+    return lis, name_lis
+
 
 
 def secure_data_files():
@@ -130,8 +131,8 @@ def secure_data_files():
     Else create new ones
     '''
     base = os.path.dirname(__file__)
-    folder = (base+"\\Data").replace("\\","/")
-    file = (base+"\\Data\\data.txt").replace("\\","/")
+    folder = (base+"/Data").replace("\\","/")
+    file = (base+"/Data/data.txt").replace("\\","/")
 
     if not os.path.exists(folder):
         os.makedirs(folder)

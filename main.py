@@ -10,8 +10,11 @@ print("Make sure data folder exist")
 file_handler.secure_data_files() # Make sure Data folders exist
 
 print("Find images and names")
-all_image_paths = file_handler.get_images_paths()
-known_face_names = file_handler.get_names()
+all_image_paths, known_face_names = file_handler.get_images_paths_and_names()
+
+
+print(known_face_names)
+print(all_image_paths)
 
 known_face_encodings = []
 print("Load all images for recognition")
@@ -38,7 +41,7 @@ while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
-    # Resize frame of video to 1/4 size for faster face recognition processing
+    # Resize frame of video to 1/4 size800 for faster face recognition processing
 
     # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
     rgb_frame = frame[:, :, ::-1]
@@ -96,6 +99,7 @@ while True:
         file_handler.save_time_data(name)
 
     # Display the resulting image
+    frame = cv2.resize(frame, (1200, 900))
     cv2.imshow('Video', frame)
 
     # Hit 'q' on the keyboard to quit!
